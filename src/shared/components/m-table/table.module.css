@@ -1,0 +1,56 @@
+.tableWrapper :global(.mantine-Table-tr:nth-of-type(odd)) {
+  background-color: white !important;
+}
+
+.tableWrapper :global(.mantine-Table-tr:nth-of-type(even)) {
+  background-color: var(--mantine-color-grayscales-1) !important;
+}
+
+.tableWrapper :global(.mantine-Table-tr:hover) {
+  background-color: var(--mantine-color-grayscales-2) !important;
+}
+
+.tableWrapper :global(.mantine-Table-tr) {
+  height: 58px;
+  cursor: pointer;
+}
+
+.tableWrapper :global(.mantine-Table-table) {
+  border-collapse: collapse !important;
+  border: none !important;
+}
+
+.tableWrapper :global(.mantine-Table-td),
+.tableWrapper :global(.mantine-Table-th) {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.tableWrapper :global(.mantine-Paper-root) {
+  border: none !important;
+}
+
+.tableWrapper :global(tbody tr) {
+  border: none !important;
+}
+
+.tableWrapper :global(thead tr) {
+  border: none !important;
+}
+
+.tableWrapper :global(.mantine-TableTd-root),
+.tableWrapper :global(.mantine-TableTh-root) {
+  border: none !important;
+}
+
+/* Pagination bottom border olib tashlash */
+.tableWrapper :global(.mantine-Paper-root > div) {
+  border: none !important;
+}
+
+.tableWrapper :global([class*='MantineReactTable-bottomToolbar']) {
+  border: none !important;
+}
