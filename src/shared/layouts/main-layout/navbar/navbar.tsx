@@ -183,7 +183,7 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
       >
         {collapsed && !isMobile ? (
           <Image
-            src="/src/assets/images/logo.png"
+            src="/images/logo.png"
             alt="Logo"
             w={28}
             h={28}
@@ -194,7 +194,7 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
           <>
             <Flex align="center" gap={8}>
               <img
-                src="/src/assets/images/logo.png"
+                src="/images/logo.png"
                 alt="Logo"
                 width={isMobile ? 24 : 28}
                 height={isMobile ? 24 : 28}

@@ -54,7 +54,7 @@ const MainLayout = () => {
             }}
           >
             <Burger opened={mobileOpened} onClick={toggleMobile} size="sm" />
-            <img src="/src/assets/images/logo.png" alt="Logo" width={24} height={24} />
+            <img src="/images/logo.png" alt="Logo" width={24} height={24} />
           </div>
         )}
         {!isMobile && <Header />}
