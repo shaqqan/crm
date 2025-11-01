@@ -102,7 +102,7 @@ export default function CoursesPage() {
         }}
       >
         <SimpleGrid
-          cols={2}
+          cols={{ base: 1, sm: 2 }}
           spacing="md"
           mt="md"
           style={{

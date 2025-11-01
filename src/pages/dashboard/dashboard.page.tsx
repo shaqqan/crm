@@ -7,7 +7,7 @@ import {
   PieChart,
   RadarChart,
 } from '@mantine/charts';
-import { Title } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
 
 export default function DashboardPage() {
   const data = [
@@ -313,13 +313,11 @@ export default function DashboardPage() {
     '2024-02-16': 3,
   };
   return (
-    <div
+    <Stack
+      gap="lg"
+      p={{ base: 12, sm: 16, md: 20 }}
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 20,
         backgroundColor: 'white',
-        padding: 20,
         borderRadius: 18,
       }}
     >
@@ -383,6 +381,6 @@ export default function DashboardPage() {
         weekdayLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
         getTooltipLabel={({ date, value }) => `${date} – ${value ?? 0} contributions`}
       />
-    </div>
+    </Stack>
   );
 }

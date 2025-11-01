@@ -196,7 +196,7 @@ export const GroupPage = () => {
         }}
       >
         <Box p="md" bg="white" style={{ borderRadius: 'var(--mantine-radius-md)' }}>
-          <SimpleGrid cols={2} spacing="md">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
             <TextInput label="Name" placeholder="Enter group name" />
 
             <Select

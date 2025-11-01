@@ -91,7 +91,7 @@ export default function RoomsPage() {
         }}
       >
         <SimpleGrid
-          cols={1}
+          cols={{ base: 1, sm: 1, md: 1 }}
           spacing="md"
           mt="md"
           style={{

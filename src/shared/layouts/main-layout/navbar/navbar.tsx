@@ -13,7 +13,7 @@ import {
   Stack,
   Tooltip,
 } from '@mantine/core';
-// SIDEBAR_LINKS, SidebarChild, SidebarLink turlarini o'zgartirishlar bilan moslash
+import { useMediaQuery } from '@mantine/hooks';
 import { SIDEBAR_LINKS, SidebarChild, SidebarLink } from '@/shared/constants/siderbar-links';
 import styles from './navbar.module.css';
 
@@ -23,24 +23,19 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
-  // O'zgartirish: t funksiyasini soddalashtirilgan holda saqlaymiz
   const t = (key: string) => key;
   const { pathname } = useLocation();
-  // Faqat birinchi 3 qismni olib, /home/dashboard yoki /admin/users kabi yo'llarni kuzatish
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const currentPath = pathname.split('/').slice(0, 3).join('/');
 
-  // Faol bolasi borligini tekshirish
   const hasActiveChild = (children?: SidebarChild[]): boolean =>
     !!children?.some((child) => child.link === currentPath || hasActiveChild(child.children));
 
-  // Ochiq bo'lishi kerak bo'lgan ota-onalarni topish
   const findOpenParents = (links: SidebarLink[] | SidebarChild[]): string[] => {
     const openIds: string[] = [];
     const checkLink = (link: SidebarLink | SidebarChild) => {
-      // Agar joriy link faol bo'lsa, ID'sini qo'shamiz
       if (link.link === currentPath) openIds.push(link.id);
       if (link.children) {
-        // Agar bolalar orasida faol link bo'lsa, ID'sini qo'shamiz va bolalarni tekshirishni davom ettiramiz
         const childHasActive = hasActiveChild(link.children);
         if (childHasActive) {
           openIds.push(link.id);
@@ -58,16 +53,13 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
       prev.includes(linkId) ? prev.filter((id) => id !== linkId) : [...prev, linkId]
     );
 
-  // 🔹 Render single NavLink (with tooltip + submenu)
   const renderNavLink = (link: SidebarLink | SidebarChild, level: number = 0) => {
-    // Kengaytirilgan holat uchun asosiy NavLink komponenti
     const navLinkContent = (
       <NavLink
         variant="filled"
-        // Icon mantine komponentlari emas, balki prop orqali keladi
         leftSection={
           <link.Icon
-            size={16}
+            size={isMobile ? 20 : 16}
             stroke={1.5}
             className={
               currentPath === link.link ? styles['main-link-icon-active'] : styles['main-link-icon']
@@ -81,24 +73,22 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
         key={link.id}
         active={currentPath === link.link}
         opened={openLinkIds.includes(link.id)}
-        // Agar yopilmagan bo'lsa va bolalari bo'lsa, ochish/yopish funksiyasini qo'shamiz
         onClick={!collapsed && link.children ? () => handleParentClick(link.id) : undefined}
         styles={{
           root: {
             justifyContent: collapsed ? 'center' : 'flex-start',
             alignItems: 'center',
-            paddingLeft: `calc(var(--mantine-spacing-md) * ${level + 1})`, // Child links for indentation
+            paddingLeft: `calc(var(--mantine-spacing-md) * ${level + 1})`,
+            fontSize: isMobile ? '15px' : '14px',
           },
-          body: { display: collapsed ? 'none' : 'flex' }, // label va o'q faqat ochiq holatda ko'rinadi
-          label: { marginLeft: level > 0 ? '10px' : '0px' }, // Indent label slightly if it's a child
+          body: { display: collapsed ? 'none' : 'flex' },
+          label: { marginLeft: level > 0 ? '10px' : '0px' },
         }}
       >
-        {/* Faqat ochiq holatda va NavLink child emas, balki JSX children sifatida */}
         {!collapsed && link.children?.map((child) => renderNavLink(child, level + 1))}
       </NavLink>
     );
 
-    // 1. Yopilgan holat, bolalari yo'q: Tooltip
     if (collapsed && !link.children) {
       return (
         <Tooltip key={link.id} label={t(link.label)} position="right" withArrow>
@@ -107,9 +97,7 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
       );
     }
 
-    // 2. Yopilgan holat, bolalari bor: Popover (Submenu)
     if (collapsed && link.children) {
-      // Popover.Target uchun NavLink. Bu NavLink faqat Iconni ko'rsatadi
       const popoverTargetNavLink = (
         <NavLink
           variant="filled"
@@ -125,16 +113,16 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
             />
           }
           className={styles['main-link']}
-          component="div" // Link emas, chunki bu Popover'ni ochadi
+          component="div"
           label={undefined}
           key={link.id}
-          active={currentPath === link.link || hasActiveChild(link.children)} // O'zgartirish: Faol bolasi bo'lsa ham active bo'lsin
+          active={currentPath === link.link || hasActiveChild(link.children)}
           styles={{
             root: {
               justifyContent: 'center',
               alignItems: 'center',
             },
-            body: { display: 'none' }, // labelni yashirish
+            body: { display: 'none' },
           }}
         />
       );
@@ -144,7 +132,6 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
           <Popover.Target>{popoverTargetNavLink}</Popover.Target>
           <Popover.Dropdown p={6}>
             <Stack gap={2}>
-              {/* Popover ichidagi bolalar */}
               {link.children.map((child) => (
                 <NavLink
                   key={child.id}
@@ -156,7 +143,7 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
                       size={18}
                       stroke={1.5}
                       className={
-                        currentPath === child.link // O'zgartirish: child.linkni tekshirish
+                        currentPath === child.link
                           ? styles['main-link-icon-active']
                           : styles['main-link-icon']
                       }
@@ -166,9 +153,8 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
                   className={styles['main-link']}
                   styles={{
                     root: {
-                      // Popover ichidagi linklar uchun stillar
                       justifyContent: 'flex-start',
-                      minWidth: 150, // Popover o'lchamini belgilash uchun
+                      minWidth: 150,
                     },
                   }}
                 />
@@ -182,18 +168,20 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
     return navLinkContent;
   };
 
+  const navbarWidth = isMobile ? 250 : collapsed ? 72 : 250;
+
   return (
-    <Box style={{ width: collapsed ? 72 : 250, transition: 'width 0.15s ease' }}>
+    <Box style={{ width: navbarWidth, transition: 'width 0.15s ease' }}>
       <Flex
-        h={72}
+        h={isMobile ? 60 : 72}
         align="center"
-        justify={collapsed ? 'center' : 'space-between'}
+        justify={collapsed && !isMobile ? 'center' : 'space-between'}
         style={{
           borderBottom: '1px solid rgba(255,255,255,0.1)',
-          padding: collapsed ? undefined : '0 16px',
+          padding: collapsed && !isMobile ? undefined : '0 16px',
         }}
       >
-        {collapsed ? (
+        {collapsed && !isMobile ? (
           <Image
             src="/src/assets/images/logo.png"
             alt="Logo"
@@ -205,25 +193,34 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
         ) : (
           <>
             <Flex align="center" gap={8}>
-              <img src="/src/assets/images/logo.png" alt="Logo" width={28} height={28} />
-              <h1>{t('navbar.title')}</h1>
+              <img
+                src="/src/assets/images/logo.png"
+                alt="Logo"
+                width={isMobile ? 24 : 28}
+                height={isMobile ? 24 : 28}
+              />
+              <h1 style={{ fontSize: isMobile ? '16px' : '18px' }}>{t('navbar.title')}</h1>
             </Flex>
 
-            <ActionIcon
-              variant="transparent"
-              color="var(--mantine-color-grayscales-7)"
-              onClick={onToggle}
-              size={28}
-            >
-              <IconChevronLeft stroke={1.5} size={20} />
-            </ActionIcon>
+            {!isMobile && (
+              <ActionIcon
+                variant="transparent"
+                color="var(--mantine-color-grayscales-7)"
+                onClick={onToggle}
+                size={28}
+              >
+                <IconChevronLeft stroke={1.5} size={20} />
+              </ActionIcon>
+            )}
           </>
         )}
       </Flex>
       <Divider orientation="horizontal" color="var(--mantine-color-grayscales-2)" size="xs" />
 
-      <ScrollArea h="calc(100vh - 72px)">
-        <Stack gap={4}>{SIDEBAR_LINKS.map((link) => renderNavLink(link))}</Stack>
+      <ScrollArea h={isMobile ? 'calc(100vh - 60px)' : 'calc(100vh - 72px)'}>
+        <Stack gap={isMobile ? 2 : 4} p={isMobile ? 8 : undefined}>
+          {SIDEBAR_LINKS.map((link) => renderNavLink(link))}
+        </Stack>
       </ScrollArea>
     </Box>
   );

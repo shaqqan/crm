@@ -208,14 +208,20 @@ export const MentorsPage = () => {
           content: { backgroundColor: 'var(--mantine-color-grayscales-1)' },
         }}
       >
-        <Flex gap="md" pt="md" pb="md">
+        <Flex
+          gap="md"
+          pt="md"
+          pb="md"
+          direction={{ base: 'column', md: 'row' }}
+          align={{ base: 'center', md: 'flex-start' }}
+        >
           <Box p="md" bg="white" style={{ borderRadius: 'var(--mantine-radius-md)' }}>
             <FileButton onChange={handleAvatarChange} accept="image/png,image/jpeg">
               {(props) => (
                 <Avatar
                   src={avatarPreview}
-                  h={200}
-                  w={180}
+                  h={{ base: 150, md: 200 }}
+                  w={{ base: 150, md: 180 }}
                   radius="md"
                   style={{ cursor: 'pointer' }}
                   imageProps={{ style: { objectFit: 'cover' } }}
@@ -226,7 +232,7 @@ export const MentorsPage = () => {
           </Box>
 
           <SimpleGrid
-            cols={2}
+            cols={{ base: 1, sm: 2 }}
             spacing="md"
             style={{
               flex: 1,
