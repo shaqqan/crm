@@ -76,6 +76,136 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     label: 'Moliya',
     Icon: FaMoneyBill,
   },
+
+  //   Sozlamar
+  {
+    id: '8',
+    label: 'Sozlamar',
+    Icon: FaCog,
+    children: [
+      // SMS Sozlamalari
+      {
+        id: '8-1',
+        link: '/settings/sms',
+        label: 'SMS Sozlamalari',
+        Icon: FaSms,
+      },
+      // Ofis
+      {
+        id: '8-2',
+        link: '/office-settings',
+        label: 'Ofis',
+        Icon: FaBuilding,
+        children: [
+          // Kurslar
+          {
+            id: '8-2-1',
+            link: '/settings/office/courses',
+            label: 'Kurslar',
+            Icon: FaBook,
+          },
+          //   Xonalar
+          {
+            id: '8-2-2',
+            link: '/settings/office/rooms',
+            label: 'Xonalar',
+            Icon: FaBuilding,
+          },
+          //   Dam olish kunlari
+          {
+            id: '8-2-3',
+            link: '/settings/office/holidays',
+            label: 'Dam olish kunlari',
+            Icon: FaCalendar,
+          },
+        ],
+      },
+      //   CEO
+      {
+        id: '8-3',
+        link: '/ceo',
+        label: 'CEO',
+        Icon: FaUserTie,
+        children: [
+          // Umumiy sozlamalar
+          {
+            id: '8-3-1',
+            link: '/settings/ceo/general-settings',
+            label: 'Umumiy sozlamalar',
+            Icon: FaCog,
+          },
+          // Xodimlar
+          {
+            id: '8-3-2',
+            link: '/settings/ceo/employees',
+            label: 'Xodimlar',
+            Icon: FaUserTie,
+          },
+        ],
+      },
+      // Harakatlar tarixi
+      {
+        id: '8-4',
+        link: '/activities-history',
+        label: 'Harakatlar tarixi',
+        Icon: FaHistory,
+        children: [
+          // Tolovlar
+          {
+            id: '8-4-1',
+            link: '/settings/activities-history/payments',
+            label: 'To`lovlar',
+            Icon: FaMoneyBill,
+          },
+          //   Tizimga kirishlar
+          {
+            id: '8-4-2',
+            link: '/settings/activities-history/logs-login',
+            label: 'Tizimga kirishlar',
+            Icon: FaSignInAlt,
+          },
+          // Bot xabarnoma
+          {
+            id: '8-4-3',
+            link: '/bot-notifications',
+            label: 'Bot xabarnoma',
+            Icon: FaBell,
+          },
+          //   Yuborilgan SMSlar
+          {
+            id: '8-4-4',
+            link: '/sent-sms-history',
+            label: 'Yuborilgan SMSlar',
+            Icon: FaSms,
+          },
+        ],
+      },
+      //   Formalar
+      {
+        id: '8-5',
+        link: '/forms',
+        label: 'Formalar',
+        Icon: FaFileAlt,
+      },
+      // Integratsiya
+      {
+        id: '8-6',
+        link: '/integration',
+        label: 'Integratsiya',
+        Icon: FaLink,
+        children: [
+          // Telegram
+          {
+            id: '8-6-1',
+            link: '/telegram-integration',
+            label: 'Telegram Bot',
+            Icon: FaTelegram,
+          },
+        ],
+      },
+    ],
+  },
+
   //   Hisobotlar
   {
     id: '7',
@@ -125,141 +255,6 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
         link: '/graduates-report',
         label: 'Bitiruvchilar',
         Icon: FaUserGraduate,
-      },
-    ],
-  },
-  //   Sozlamar
-  {
-    id: '8',
-    label: 'Sozlamar',
-    Icon: FaCog,
-    children: [
-      // SMS Sozlamalari
-      {
-        id: '8-1',
-        link: '/sms-settings',
-        label: 'SMS Sozlamalari',
-        Icon: FaSms,
-      },
-      // Ofis
-      {
-        id: '8-2',
-        link: '/office-settings',
-        label: 'Ofis',
-        Icon: FaBuilding,
-        children: [
-          // Kurslar
-          {
-            id: '8-2-1',
-            link: '/courses-settings',
-            label: 'Kurslar',
-            Icon: FaBook,
-          },
-          //   Xonalar
-          {
-            id: '8-2-2',
-            link: '/rooms-settings',
-            label: 'Xonalar',
-            Icon: FaBuilding,
-          },
-          //   Dam olish kunlari
-          {
-            id: '8-2-3',
-            link: '/holidays-settings',
-            label: 'Dam olish kunlari',
-            Icon: FaCalendar,
-          },
-          //   Maktablar
-          {
-            id: '8-2-4',
-            link: '/schools-settings',
-            label: 'Maktablar',
-            Icon: FaSchool,
-          },
-        ],
-      },
-      //   CEO
-      {
-        id: '8-3',
-        link: '/ceo-settings',
-        label: 'CEO',
-        Icon: FaUserTie,
-        children: [
-          // Umumiy sozlamalar
-          {
-            id: '8-3-1',
-            link: '/general-settings',
-            label: 'Umumiy sozlamalar',
-            Icon: FaCog,
-          },
-          // Xodimlar
-          {
-            id: '8-3-2',
-            link: '/employees-settings',
-            label: 'Xodimlar',
-            Icon: FaUserTie,
-          },
-        ],
-      },
-      // Harakatlar tarixi
-      {
-        id: '8-4',
-        link: '/activities-history',
-        label: 'Harakatlar tarixi',
-        Icon: FaHistory,
-        children: [
-          // Tolovlar
-          {
-            id: '8-4-1',
-            link: '/payments-history',
-            label: 'To`lovlar',
-            Icon: FaMoneyBill,
-          },
-          //   Tizimga kirishlar
-          {
-            id: '8-4-2',
-            link: '/login-history',
-            label: 'Tizimga kirishlar',
-            Icon: FaSignInAlt,
-          },
-          // Bot xabarnoma
-          {
-            id: '8-4-3',
-            link: '/bot-notifications',
-            label: 'Bot xabarnoma',
-            Icon: FaBell,
-          },
-          //   Yuborilgan SMSlar
-          {
-            id: '8-4-4',
-            link: '/sent-sms-history',
-            label: 'Yuborilgan SMSlar',
-            Icon: FaSms,
-          },
-        ],
-      },
-      //   Formalar
-      {
-        id: '8-5',
-        link: '/forms',
-        label: 'Formalar',
-        Icon: FaFileAlt,
-      },
-      // Integratsiya
-      {
-        id: '8-6',
-        link: '/integration',
-        label: 'Integratsiya',
-        Icon: FaLink,
-        children: [
-          // Telegram
-          {
-            id: '8-6-1',
-            link: '/telegram-integration',
-            label: 'Telegram Bot',
-            Icon: FaTelegram,
-          },
-        ],
       },
     ],
   },

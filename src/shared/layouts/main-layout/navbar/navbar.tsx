@@ -67,7 +67,7 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
         // Icon mantine komponentlari emas, balki prop orqali keladi
         leftSection={
           <link.Icon
-            size={20}
+            size={16}
             stroke={1.5}
             className={
               currentPath === link.link ? styles['main-link-icon-active'] : styles['main-link-icon']
@@ -179,7 +179,6 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
       );
     }
 
-    // 3. Ochiq holat (default): oddiy NavLinkni o'zini qaytaramiz
     return navLinkContent;
   };
 
@@ -188,7 +187,6 @@ export const Navbar = ({ collapsed, onToggle }: NavbarProps) => {
       <Flex
         h={72}
         align="center"
-        // 🌟 MUHIM O'ZGARTIRISH: Collapsed holatda logoni markazga joylashtirish
         justify={collapsed ? 'center' : 'space-between'}
         style={{
           borderBottom: '1px solid rgba(255,255,255,0.1)',

@@ -32,7 +32,7 @@ export default function LeadsPage() {
       email: 'jim.doe@example.com',
     },
   ];
-  
+
   return (
     <>
       <MTable columns={columns} data={data} />

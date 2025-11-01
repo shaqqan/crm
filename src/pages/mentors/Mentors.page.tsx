@@ -1,7 +1,19 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { type MRT_ColumnDef } from 'mantine-react-table';
-import { useNavigate } from 'react-router-dom';
-import { Badge } from '@mantine/core';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  FileButton,
+  Flex,
+  Modal,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { MTable } from '@/shared/components/m-table/m-table';
 
 // Type definition
@@ -165,28 +177,112 @@ const data: Mentor[] = [
 
 // Mentors page
 export const MentorsPage = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
+  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
+
+  // --- CREATE MODAL ---
+  const CreateMentorModal = () => {
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+    const handleAvatarChange = (file: File | null) => {
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => setAvatarPreview(reader.result as string);
+        reader.readAsDataURL(file);
+      } else {
+        setAvatarPreview(null);
+      }
+    };
+
+    return (
+      <Modal
+        opened={opened}
+        onClose={close}
+        radius="md"
+        size="xl"
+        centered
+        title="Create Mentor"
+        overlayProps={{ backgroundOpacity: 0.6, blur: 1.5 }}
+        styles={{
+          content: { backgroundColor: 'var(--mantine-color-grayscales-1)' },
+        }}
+      >
+        <Flex gap="md" pt="md" pb="md">
+          <Box p="md" bg="white" style={{ borderRadius: 'var(--mantine-radius-md)' }}>
+            <FileButton onChange={handleAvatarChange} accept="image/png,image/jpeg">
+              {(props) => (
+                <Avatar
+                  src={avatarPreview}
+                  h={200}
+                  w={180}
+                  radius="md"
+                  style={{ cursor: 'pointer' }}
+                  imageProps={{ style: { objectFit: 'cover' } }}
+                  {...props}
+                />
+              )}
+            </FileButton>
+          </Box>
+
+          <SimpleGrid
+            cols={2}
+            spacing="md"
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: 'var(--mantine-radius-md)',
+              padding: '16px',
+            }}
+          >
+            <TextInput label="Full Name" placeholder="Enter full name" />
+            <TextInput label="Specialization" placeholder="Enter specialization" />
+            <TextInput label="Experience" placeholder="Enter experience" />
+            <TextInput label="Courses Count" placeholder="Enter courses count" />
+            <TextInput label="Status" placeholder="Enter status" />
+            <TextInput label="Joined At" placeholder="Enter joined at" />
+          </SimpleGrid>
+        </Flex>
+        <Flex justify="flex-end" gap="sm">
+          <Button onClick={close} variant="outline">
+            Cancel
+          </Button>
+          <Button onClick={close}>Create</Button>
+        </Flex>
+      </Modal>
+    );
+  };
+
+  // --- DELETE CONFIRM MODAL ---
+  const DeleteMentorModal = () => (
+    <Modal opened={deleteOpened} onClose={closeDelete} title="Confirm Deletion" radius="md">
+      <Stack>
+        <Text>
+          Are you sure you want to delete <strong>{selectedMentor?.fullName}</strong>?
+        </Text>
+        <Flex justify="flex-end" gap="sm" pt="md">
+          <Button variant="outline" onClick={closeDelete}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              console.log('Deleted mentor:', selectedMentor?.id);
+              closeDelete();
+            }}
+          >
+            Delete
+          </Button>
+        </Flex>
+      </Stack>
+    </Modal>
+  );
+
   const columns = useMemo<MRT_ColumnDef<Mentor>[]>(
     () => [
-      {
-        accessorKey: 'fullName',
-        header: 'Full Name',
-        size: 180,
-      },
-      {
-        accessorKey: 'specialization',
-        header: 'Specialization',
-        size: 180,
-      },
-      {
-        accessorKey: 'experience',
-        header: 'Experience (yrs)',
-        size: 100,
-      },
-      {
-        accessorKey: 'coursesCount',
-        header: 'Courses',
-        size: 100,
-      },
+      { accessorKey: 'fullName', header: 'Full Name', size: 180 },
+      { accessorKey: 'specialization', header: 'Specialization', size: 180 },
+      { accessorKey: 'experience', header: 'Experience (yrs)', size: 100 },
+      { accessorKey: 'coursesCount', header: 'Courses', size: 100 },
       {
         accessorKey: 'status',
         header: 'Status',
@@ -197,49 +293,46 @@ export const MentorsPage = () => {
           </Badge>
         ),
       },
-      {
-        accessorKey: 'joinedAt',
-        header: 'Joined At',
-        size: 120,
-      },
+      { accessorKey: 'joinedAt', header: 'Joined At', size: 120 },
     ],
     []
   );
 
   const handleEdit = (id: number) => {
     console.log('Edit mentor:', id);
-    // navigate(`/mentors/edit/${id}`);
   };
 
   const handleDelete = (id: number) => {
-    console.log('Delete mentor:', id);
-    // confirm and delete logic
+    const mentor = data.find((m) => m.id === id);
+    setSelectedMentor(mentor ?? null);
+    openDelete(); // ochirish modalni ochamiz
   };
 
   const handleRowClick = (id: string) => {
     console.log('Go to mentor details:', id);
-    // navigate(`/mentors/${id}`);
   };
 
-  const handleCreate = () => {
-    console.log('Create new mentor');
-    // navigate(`/mentors/create`);
-  };
+  const handleCreate = () => open();
 
   return (
-    <MTable
-      columns={columns}
-      data={data}
-      loading={false}
-      isError={false}
-      errorText="Failed to load mentors"
-      enableRowActions
-      editM={handleEdit}
-      deleteM={handleDelete}
-      goTo={handleRowClick}
-      rowCount={data.length}
-      createM={handleCreate}
-      createButtonText="Add Mentor"
-    />
+    <>
+      <MTable
+        columns={columns}
+        data={data}
+        loading={false}
+        isError={false}
+        errorText="Failed to load mentors"
+        enableRowActions
+        editM={handleEdit}
+        deleteM={handleDelete}
+        goTo={handleRowClick}
+        rowCount={data.length}
+        createM={handleCreate}
+        createButtonText="Add Mentor"
+      />
+
+      <CreateMentorModal />
+      <DeleteMentorModal />
+    </>
   );
 };
