@@ -36,7 +36,14 @@ export const Header = () => {
       )}
 
       {/* Search bar */}
-      <Flex>
+      <Box
+        style={{
+          flex: isMobile ? 1 : isTablet ? 1 : 1,
+          width: isMobile ? 'auto' : isTablet ? 'auto' : 600,
+          maxWidth: isMobile ? 'none' : 600,
+          minWidth: isMobile ? 0 : 'auto',
+        }}
+      >
         <TextInput
           placeholder={isMobile ? '' : 'Search'}
           size={isMobile ? 'sm' : isTablet ? 'sm' : 'md'}
@@ -54,7 +61,7 @@ export const Header = () => {
             },
           }}
         />
-      </Flex>
+      </Box>
 
       {/* Right section */}
       <Flex
