@@ -31,15 +31,20 @@ import SchoolsPage from '@/pages/settings/office/schools/Schools.page';
 // Settings pages
 import SmsPage from '@/pages/settings/sms/Sms.page';
 import StudentsPage from '@/pages/students/Students.page';
+import LoginPage from '@/pages/auth/Login.page';
 import MainLayout from '../layouts/main-layout/main/main-layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
+    element: <LoginPage />,
+  },
+  {
+    path: '/',
     element: <MainLayout />,
     children: [
       {
-        path: '/',
+        path: '/dashboard',
         element: <DashboardPage />,
       },
       {

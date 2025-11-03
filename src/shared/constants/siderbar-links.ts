@@ -39,7 +39,7 @@ export type SidebarLink = {
 export const SIDEBAR_LINKS: SidebarLink[] = [
   {
     id: '1',
-    link: '/',
+    link: '/dashboard',
     label: 'Bosh sahifa',
     Icon: FaHome,
   },
