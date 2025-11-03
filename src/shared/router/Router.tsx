@@ -97,6 +97,10 @@ export const router = createBrowserRouter([
           },
         ],
       },
-    ],
+      {
+        path: '*',
+        element: <>404 not found</>,
+      },
+    ],  
   },
 ]);
