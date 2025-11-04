@@ -1,5 +1,5 @@
-import { HiOutlineSearch } from 'react-icons/hi';
-import { ActionIcon, Box, Flex, Menu, Text, TextInput } from '@mantine/core';
+import { HiOutlineSearch, HiPlus } from 'react-icons/hi';
+import { ActionIcon, Box, Button, Flex, Menu, Text, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { Branch } from './branch';
 import { Language } from './language';
@@ -24,16 +24,27 @@ export const Header = () => {
       }}
     >
       {/* Branch - desktop only */}
-      {!isTablet && (
-        <Branch
-          branches={[
-            { id: '3', name: 'UNI ACADEMY BRANCH 2' },
-            { id: '4', name: 'UNI ACADEMY BRANCH 3' },
-            { id: '5', name: 'UNI ACADEMY BRANCH 4' },
-            { id: '6', name: 'UNI ACADEMY BRANCH 5' },
-          ]}
-        />
-      )}
+      <Box style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {!isTablet && (
+          <Branch
+            branches={[
+              { id: '3', name: 'UNI ACADEMY BRANCH 2' },
+              { id: '4', name: 'UNI ACADEMY BRANCH 3' },
+              { id: '5', name: 'UNI ACADEMY BRANCH 4' },
+              { id: '6', name: 'UNI ACADEMY BRANCH 5' },
+            ]}
+          />
+        )}
+        <Button
+          variant="white"
+          style={{
+            padding: '10px 12px',
+            border: '1px solid var(--mantine-color-grayscales-2)',
+          }}
+        >
+          <HiPlus size={20} color="var(--mantine-color-grayscales-5)" />
+        </Button>
+      </Box>
 
       {/* Search bar */}
       <Box
