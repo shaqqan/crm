@@ -12,6 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { AreaChart } from '@mantine/charts';
 import { Badge, Card, Group, Stack, Tabs, Text, Title, Tooltip } from '@mantine/core';
+import CountUp from 'react-countup';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -73,7 +74,12 @@ const StatCard = ({ icon, label, value, color = 'primary' }: StatCardProps) => {
               alignItems: 'flex-end',
             }}
           >
-            {value.toLocaleString()}
+            <CountUp
+              end={value}
+              duration={1.5}
+              separator=","
+              decimals={0}
+            />
           </Text>
         </Stack>
       </Stack>
@@ -416,7 +422,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <Stack gap="lg" p={{ base: 12, sm: 16, md: 20 }}>
+    <Stack gap="lg">
       <div
         style={{
           display: 'grid',
