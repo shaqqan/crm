@@ -10,9 +10,9 @@ import {
   IconUsersGroup,
   IconUserStar,
 } from '@tabler/icons-react';
+import CountUp from 'react-countup';
 import { AreaChart } from '@mantine/charts';
 import { Badge, Card, Group, Stack, Tabs, Text, Title, Tooltip } from '@mantine/core';
-import CountUp from 'react-countup';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -74,12 +74,7 @@ const StatCard = ({ icon, label, value, color = 'primary' }: StatCardProps) => {
               alignItems: 'flex-end',
             }}
           >
-            <CountUp
-              end={value}
-              duration={1.5}
-              separator=","
-              decimals={0}
-            />
+            <CountUp end={value} duration={1.5} separator="," decimals={0} />
           </Text>
         </Stack>
       </Stack>
@@ -131,12 +126,16 @@ function slotLabel(slotIndex: number): string {
   return `${hh}:${mm}`;
 }
 
-function ScheduleGrid({ rooms, lessons, slotHeight = 56 }: { rooms: string[]; lessons: LessonItem[]; slotHeight?: number }) {
+function ScheduleGrid({
+  rooms,
+  lessons,
+  slotHeight = 56,
+}: {
+  rooms: string[];
+  lessons: LessonItem[];
+  slotHeight?: number;
+}) {
   const labelsEvery = 60 / SLOT_MINUTES;
-  const now = new Date();
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const showNow = nowMinutes >= START_MINUTES && nowMinutes <= END_MINUTES;
-  const nowIdx = getSlotIndex(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -150,7 +149,7 @@ function ScheduleGrid({ rooms, lessons, slotHeight = 56 }: { rooms: string[]; le
           top: 0,
           zIndex: 2,
           background: 'var(--mantine-color-body)',
-          borderBottom: '1px solid var(--mantine-color-grayscales-3)'
+          borderBottom: '1px solid var(--mantine-color-grayscales-3)',
         }}
       >
         <div />
@@ -161,95 +160,91 @@ function ScheduleGrid({ rooms, lessons, slotHeight = 56 }: { rooms: string[]; le
         ))}
       </div>
 
-      {rooms.map((room) => (
-        <div
-          key={room}
-          style={{
-            position: 'relative',
-            display: 'grid',
-            gridTemplateColumns: `160px repeat(${TOTAL_SLOTS}, 1fr)`,
-            alignItems: 'stretch',
-            gap: 8,
-            background: `repeating-linear-gradient(to right, transparent 0, transparent calc(100% / ${TOTAL_SLOTS} - 1px), rgba(0,0,0,0.04) calc(100% / ${TOTAL_SLOTS} - 1px), rgba(0,0,0,0.04) calc(100% / ${TOTAL_SLOTS}))`,
-            borderRadius: 8,
-          }}
-        >
-          <Text
-            fw={600}
+      {rooms.map((room, roomIndex) => (
+        <div key={room}>
+          <div
             style={{
-              position: 'sticky',
-              left: 0,
-              zIndex: 1,
-              background: 'var(--mantine-color-body)',
-              padding: '12px 8px',
-              borderRight: '1px solid var(--mantine-color-grayscales-3)'
+              position: 'relative',
+              display: 'grid',
+              gridTemplateColumns: `160px repeat(${TOTAL_SLOTS}, 1fr)`,
+              alignItems: 'stretch',
+              gap: 8,
+              borderRadius: 8,
             }}
           >
-            {room}
-          </Text>
+            <Text
+              fw={600}
+              style={{
+                position: 'sticky',
+                left: 0,
+                zIndex: 1,
+                padding: '12px 8px',
+              }}
+            >
+              {room}
+            </Text>
 
-          {showNow && (
+            {lessons
+              .filter((l) => l.room === room)
+              .map((l, idx) => {
+                const startCol = 2 + getSlotIndex(l.start);
+                const span = getDurationSlots(l.start, l.end);
+                return (
+                  <Tooltip
+                    key={`${room}-${idx}-${l.start}`}
+                    label={`${l.course} • ${l.mentor} • ${l.start}–${l.end}`}
+                    withArrow
+                  >
+                    <div
+                      style={{
+                        gridColumn: `${startCol} / span ${span}`,
+                        height: slotHeight,
+                        marginTop: 4,
+                        borderRadius: 10,
+                        background:
+                          l.color ||
+                          'linear-gradient(135deg, var(--mantine-color-primary-4), var(--mantine-color-primary-6))',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        padding: '8px 12px',
+                        boxShadow: '0 6px 14px rgba(0,0,0,0.08)',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        cursor: 'default',
+                      }}
+                    >
+                      <Stack gap={2}>
+                        <Text fw={600} size="sm" style={{ color: 'white', pointerEvents: 'none' }}>
+                          {l.course} - {l.mentor}
+                        </Text>
+                        <Text
+                          size="xs"
+                          style={{
+                            pointerEvents: 'none',
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            textAlign: 'center',
+                          }}
+                        >
+                          {l.start} - {l.end}
+                        </Text>
+                      </Stack>
+                    </div>
+                  </Tooltip>
+                );
+              })}
+          </div>
+          {roomIndex < rooms.length - 1 && (
             <div
               style={{
-                gridColumn: `${2 + nowIdx} / span 1`,
-                pointerEvents: 'none',
-                height: slotHeight,
-                alignSelf: 'center',
-                borderRight: '2px solid var(--mantine-color-primary-6)'
+                gridColumn: `1 / -1`,
+                height: 1,
+                background: 'var(--mantine-color-grayscales-3)',
+                margin: '4px 0',
               }}
             />
           )}
-
-          {lessons
-            .filter((l) => l.room === room)
-            .map((l, idx) => {
-              const startCol = 2 + getSlotIndex(l.start);
-              const span = getDurationSlots(l.start, l.end);
-              return (
-                <Tooltip
-                  key={`${room}-${idx}-${l.start}`}
-                  label={`${l.course} • ${l.mentor} • ${l.start}–${l.end}`}
-                  withArrow
-                >
-                  <div
-                    style={{
-                      gridColumn: `${startCol} / span ${span}`,
-                      height: slotHeight,
-                      marginTop: 4,
-                      borderRadius: 10,
-                      background:
-                        l.color || 'linear-gradient(135deg, var(--mantine-color-primary-4), var(--mantine-color-primary-6))',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '8px 12px',
-                      boxShadow: '0 6px 14px rgba(0,0,0,0.08)',
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      cursor: 'default'
-                    }}
-                  >
-                    <Badge color="dark" variant="white" style={{ pointerEvents: 'none' }}>
-                      {l.start}
-                    </Badge>
-                    <Text fw={600} size="sm" style={{ pointerEvents: 'none', color: 'white' }}>
-                      {l.course}
-                    </Text>
-                    <Text
-                      size="sm"
-                      style={{
-                        marginLeft: 'auto',
-                        pointerEvents: 'none',
-                        color: 'rgba(255, 255, 255, 0.95)'
-                      }}
-                    >
-                      {l.mentor}
-                    </Text>
-                  </div>
-                </Tooltip>
-              );
-            })}
         </div>
       ))}
     </div>
